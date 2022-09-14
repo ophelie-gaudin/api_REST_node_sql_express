@@ -13,4 +13,12 @@ module.exports = new EntitySchema({
       unique: true,
     },
   },
+  relations: {
+    // wilders: {
+    //   target: "WilderSkill",
+    //   type: "one-to-many",
+    // joinTable: true,
+    //   eager: true,
+    // },
+  },
 });

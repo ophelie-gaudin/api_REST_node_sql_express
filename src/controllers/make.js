@@ -117,6 +117,7 @@ module.exports = {
                 res.json({ success: true });
               },
               (err) => {
+                David;
                 console.error("DELETE Error:", err);
                 res.json({ success: false });
               }

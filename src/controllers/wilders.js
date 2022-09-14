@@ -5,93 +5,92 @@ const repository = datasource.getRepository("Wilder");
 const skillRepository = datasource.getRepository("Skill");
 
 module.exports = {
-  create: (req, res) => {
+  create: async (req, res) => {
     // //* 1st METHOD : lancer les requêtes via TypeORM
-    // repository.save(req.body).then(
-    //   (data) => {
-    //     console.log("Wilder created");
-    //     res.json(data, { message: "Wilder created" });
-    //   },
-    //   (err) => {
-    //     console.error("CREATE Error:", err);
-    //     res.json({ success: false });
-    //   }
-    // );
+
+    try {
+      const data = await repository.save(req.body);
+
+      console.log("Wilder created");
+      res.json(data);
+    } catch (err) {
+      console.error("CREATE Error:", err);
+      res.json({ success: false });
+    }
 
     //* 2nd METHOD : lancer les requêtes directement via SQL
-    repository
-      .query("INSERT INTO wilder(name) VALUES (?)", [req.body.name])
-      .then(
-        (id) => {
-          repository
-            .query("SELECT * FROM wilder WHERE id=?", [id])
-            .then((data) => {
-              console.log("Wilder created");
-              res.json(data[0]);
-            });
-        },
-        (err) => {
-          console.error("CREATE Error:", err);
-          res.json({ success: false });
-        }
-      );
+    // try {
+    //   const wilderId = await repository.query(
+    //     "INSERT INTO wilder(name) VALUES (?)",
+    //     [req.body.name]
+    //   );
+
+    //   try {
+    //     const data = await repository.query("SELECT * FROM wilder WHERE id=?", [
+    //       wilderId,
+    //     ]);
+    //     console.log("Wilder created");
+    //     res.json(data[0]);
+    //   } catch (err) {
+    //     console.error("CREATE Error for showing:", err);
+    //   }
+    // } catch (err) {
+    //   console.error("CREATE Error:", err);
+    //   res.json({ success: false });
+    // }
   },
 
-  findAll: (req, res) => {
-    repository.find().then((data) => {
-      res.json(data);
-    });
+  findAll: async (req, res) => {
+    try {
+      const wilders = await repository.find();
+      res.json(wilders);
+    } catch (err) {
+      console.error("FINDALL Error :", err);
+      res.json({ success: false });
+    }
   },
 
-  find: (req, res) => {
+  find: async (req, res) => {
     //* 3 METHODS :
     //* req.body --> body request
     //* req.params --> url : /api/wilders/:wilderId
     //* req.query --> url but depends of demand of users (not predictable) : /api/wilders?wilderId=...
 
     //* METHOD by req.params
-    const wilderId = req.params.wilderId;
 
-    repository.findOneBy({ id: wilderId }).then(
-      (data) => {
-        res.json(data);
-      },
-      (err) => {
-        console.error("FIND Error :", err);
-        res.json({ success: false });
-      }
-    );
+    try {
+      const wilderId = req.params.wilderId;
+      const wilder = await repository.findOneBy({ id: wilderId });
+      res.json(wilder);
+    } catch (err) {
+      console.error("FIND Error :", err);
+      res.json({ success: false });
+    }
   },
 
-  update: (req, res) => {
+  update: async (req, res) => {
     //* 2 METHODS :
     //* request by raw SQL --> "UPDATE... FROM ..."
     //* TypeORM: find + save
 
     const wilderId = req.params.wilderId;
 
-    repository.findOneBy({ id: wilderId }).then(
-      (wilder) => {
-        // Object.assign permet de modifier un objet existant
-        // on aurait aussi pu faire : wilder.name = req.body.name;
-        Object.assign(wilder, req.body);
+    const wilder = await repository.findOneBy({ id: wilderId });
 
-        repository.save(wilder).then((updatedWilder) => {
-          res.json(updatedWilder);
-        });
-      },
-      (err) => {
-        console.error("UPDATE: Error when saving:", err);
-        res.json({ success: false });
-      }
-    ),
-      (err) => {
-        console.error("UPDATE Error when finding:", err);
-        res.json({ success: false });
-      };
+    // Object.assign permet de modifier un objet existant
+    // on aurait aussi pu faire : wilder.name = req.body.name;
+    Object.assign(wilder, req.body);
+
+    try {
+      const updatedWilder = await repository.save(wilder);
+      res.json(updatedWilder);
+    } catch (err) {
+      console.error("UPDATE: Error when saving:", err);
+      res.json({ success: false });
+    }
   },
 
-  delete: (req, res) => {
+  delete: async (req, res) => {
     //* 2 METHODS :
     //* request by raw SQL --> "UPDATE... FROM ..."
     //* TypeORM: find + save
@@ -100,34 +99,29 @@ module.exports = {
 
     // //* 1st METHOD with SQL
 
-    // repository.query("DELETE FROM wilder WHERE id=?", [wilderId]).then(
-    //   () => {
-    //     res.json({ success: true });
-    //   },
-    //   (err) => {
-    //     console.error("DELETE Error: ", err);
-    //     res.json({ success: false });
-    //   }
-    // );
+    // try {
+    //   await repository.query("DELETE FROM wilder WHERE id=?", [wilderId]);
+    //   res.json({ success: true });
+    // } catch (err) {
+    //   console.error("DELETE Error", err);
+    //   res.json({ success: false });
+    // }
 
     //* 2nd METHOD with TypeORM
-    repository.findOneBy({ id: wilderId }).then(
-      (wilder) => {
-        repository.remove(wilder).then(
-          () => {
-            res.json({ success: true });
-          },
-          (err) => {
-            console.error("DELETE Error:", err);
-            res.json({ success: false });
-          }
-        );
-      },
-      (err) => {
-        console.error("DELETE Error when finding", err);
+    try {
+      const wilder = await repository.findOneBy({ id: wilderId });
+
+      try {
+        await repository.remove(wilder);
+        res.json({ success: true });
+      } catch (err) {
+        console.error("DELETE Error:", err);
         res.json({ success: false });
       }
-    );
+    } catch (err) {
+      console.error("DELETE Error when finding", err);
+      res.json({ success: false });
+    }
   },
 
   addSkill: async (req, res) => {
@@ -143,6 +137,7 @@ module.exports = {
       console.log("Skill to add :", skillToAdd);
 
       wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
+      //wilderToUpdate.skills.push(skillToAdd)
 
       await repository.save(wilderToUpdate);
 
@@ -153,5 +148,50 @@ module.exports = {
     }
   },
 
-  findAllSkills: async (req, res) => {},
+  findAllSkills: async (req, res) => {
+    try {
+      const wilderToGiveDetails = await repository.findOneBy({
+        id: req.params.wilderId,
+      });
+      console.log("Wilder's skills :", wilderToGiveDetails.skills);
+      res.json(wilderToGiveDetails.skills);
+    } catch (err) {
+      console.log(err);
+      res.send("Error while seeing wilder's skills");
+    }
+  },
+
+  deleteSkill: async (req, res) => {
+    try {
+      const wilderToDeleteSkill = await repository.findOneBy({
+        id: req.params.wilderId,
+      });
+      console.log("Wilder to delete a skill: ", wilderToDeleteSkill);
+
+      const skillToDelete = await skillRepository.findOneBy({
+        id: req.params.skillId,
+      });
+      console.log("Skill to delete", skillToDelete);
+
+      const wilderSkills = wilderToDeleteSkill.skills;
+      console.log("Wilder's skills :", wilderSkills);
+
+      wilderSkills.remove(skillToDelete).then(
+        () => {
+          console.log(
+            "Wilder without deleted skill",
+            wilderToDeleteSkill.skills
+          );
+          res.json({ success: true });
+        },
+        (err) => {
+          console.error("DELETE Error:", err);
+          res.json({ success: false });
+        }
+      );
+    } catch (err) {
+      console.log(err);
+      res.send("Error while deleting wilder's skills");
+    }
+  },
 };

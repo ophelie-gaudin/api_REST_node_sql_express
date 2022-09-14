@@ -7,6 +7,19 @@ const skillsController = require(`./controllers/skills`);
 
 const app = express();
 
+const asyncHandler = (controller) => {
+  return async (req, res) => {
+    console.log("I'm executing a controller by asyncHandler !");
+
+    try {
+      await controller(req, res);
+    } catch (err) {
+      console.error("Error :", err);
+      res.json({ success: false });
+    }
+  };
+};
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -25,10 +38,10 @@ app.post("/api/wilders", wildersController.create);
 app.get("/api/wilders", wildersController.findAll);
 
 // find
-app.get("/api/wilders/:wilderId", wildersController.find);
+app.get("/api/wilders/:wilderId", asyncHandler(wildersController.find));
 
 // update
-app.put("/api/wilders/:wilderId", wildersController.update);
+app.put("/api/wilders/:wilderId", asyncHandler(wildersController.update));
 
 // delete
 app.delete("/api/wilders/:wilderId", wildersController.delete);
@@ -58,13 +71,18 @@ app.delete("/api/skills/:skillId", skillsController.delete);
 
 app.post("/api/wilders/:wilderId/skills/:skillId", wildersController.addSkill);
 
-// Start server
-app.listen(3000, () => {
-  console.log("Server started on port:3000");
+app.get("/api/wilders/:wilderId/skills/", wildersController.findAllSkills);
 
-  datasource.initialize().then(() => {
-    console.log("I'm connected ! ");
-  });
+app.delete(
+  "/api/wilders/:wilderId/skills/:skillId",
+  wildersController.deleteSkill
+);
+
+// Start server
+app.listen(4000, async () => {
+  console.log("Server started on port:4000");
+  await datasource.initialize();
+  console.log("I'm connected ! ");
 });
 
 // makeCrud({ entitySchema: {
