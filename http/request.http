@@ -1,0 +1,49 @@
+GET http://localhost:3000/
+
+### 
+
+POST http://localhost:3000/api/wilders
+Content-Type: application/json
+
+{ "name": "Hella" }
+
+###
+GET http://localhost:3000/api/wilders
+Content-Type: application/json
+
+###
+GET http://localhost:3000/api/wilders/16
+
+###
+PUT http://localhost:3000/api/wilders/16
+Content-Type: application/json
+
+{ "name": "Pioupiou" }
+
+###
+DELETE http://localhost:3000/api/wilders/19
+
+
+### 
+
+POST http://localhost:3000/api/skills
+Content-Type: application/json
+
+{ "name": "Python" }
+
+###
+GET http://localhost:3000/api/skills
+Content-Type: application/json
+
+###
+GET http://localhost:3000/api/skills/4
+
+###
+PUT http://localhost:3000/api/skills/4
+Content-Type: application/json
+
+{ "name": "Pioupiou" }
+
+###
+DELETE http://localhost:3000/api/skills/4
+
