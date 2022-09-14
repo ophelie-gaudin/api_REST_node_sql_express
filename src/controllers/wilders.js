@@ -2,6 +2,8 @@ const datasource = require("../utils");
 
 const repository = datasource.getRepository("Wilder");
 
+const skillRepository = datasource.getRepository("Skill");
+
 module.exports = {
   create: (req, res) => {
     // //* 1st METHOD : lancer les requêtes via TypeORM
@@ -127,4 +129,29 @@ module.exports = {
       }
     );
   },
+
+  addSkill: async (req, res) => {
+    try {
+      const wilderToUpdate = await repository.findOneBy({
+        id: req.params.wilderId,
+      });
+      console.log("Wilder to update : ", wilderToUpdate);
+
+      const skillToAdd = await skillRepository.findOneBy({
+        id: req.params.skillId,
+      });
+      console.log("Skill to add :", skillToAdd);
+
+      wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
+
+      await repository.save(wilderToUpdate);
+
+      res.send("Skill added to wilder");
+    } catch (err) {
+      console.log(err);
+      res.send("Error while adding skill to wilder");
+    }
+  },
+
+  findAllSkills: async (req, res) => {},
 };

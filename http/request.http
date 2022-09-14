@@ -29,7 +29,7 @@ DELETE http://localhost:3000/api/wilders/19
 POST http://localhost:3000/api/skills
 Content-Type: application/json
 
-{ "name": "Python" }
+{ "name": "blabla" }
 
 ###
 GET http://localhost:3000/api/skills
@@ -47,3 +47,6 @@ Content-Type: application/json
 ###
 DELETE http://localhost:3000/api/skills/4
 
+
+###
+POST http://localhost:3000/api/wilders/1/skills/1

@@ -52,6 +52,12 @@ app.put("/api/skills/:skillId", skillsController.update);
 // delete
 app.delete("/api/skills/:skillId", skillsController.delete);
 
+/**
+ * JoinTable routes Wilder - Skill (many to many)
+ */
+
+app.post("/api/wilders/:wilderId/skills/:skillId", wildersController.addSkill);
+
 // Start server
 app.listen(3000, () => {
   console.log("Server started on port:3000");
