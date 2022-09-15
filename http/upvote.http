@@ -1,0 +1,7 @@
+POST http://localhost:5000/api/upvotes
+Content-Type: application/json
+
+{ "wilder": 2, "skill": 1 }
+
+###
+PUT http://localhost:5000/api/upvotes/1/increase

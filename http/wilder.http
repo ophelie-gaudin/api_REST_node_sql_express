@@ -25,7 +25,7 @@ DELETE http://localhost:5000/api/wilders/5
 POST http://localhost:5000/api/wilders/1/skills/
 Content-Type: application/json
 
-{"skillId": 3 }
+{"skillId": 2 }
 
 ### si plusieurs skill, changer par ça le body de la requête et traiter un tableau de skillsId dans le controler et pas juste un id {"skillsId": [3, 4] }
 

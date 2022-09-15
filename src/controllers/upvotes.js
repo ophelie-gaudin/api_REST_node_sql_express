@@ -44,9 +44,11 @@ module.exports = {
     });
 
     if (existingUpvote) {
-      existingUpvote.upvote = existingUpvote.upvote + 1;
+      existingUpvote.counter = existingUpvote.counter + 1;
 
       await repository.save(existingUpvote);
+
+      res.json(existingUpvote);
     } else {
       // create an error
 

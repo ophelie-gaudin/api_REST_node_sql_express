@@ -1,7 +1,8 @@
+
 POST http://localhost:5000/api/skills
 Content-Type: application/json
 
-{ "name": "CSS" }
+{ "name": "Tailwind" }
 
 ###
 GET http://localhost:5000/api/skills
@@ -14,7 +15,7 @@ GET http://localhost:5000/api/skills/4
 PUT http://localhost:5000/api/skills/4
 Content-Type: application/json
 
-{ "name": "Pioupiou" }
+{ "name": "Node JS" }
 
 ###
 DELETE http://localhost:5000/api/skills/4
