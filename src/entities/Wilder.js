@@ -13,11 +13,10 @@ module.exports = new EntitySchema({
     },
   },
   relations: {
-    skills: {
-      target: "Skill",
-      type: "many-to-many",
-      joinTable: true,
-      eager: true,
+    upvotes: {
+      target: "Upvote",
+      type: "one-to-many",
+      inverseSide: "wilder",
     },
   },
 });

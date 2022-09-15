@@ -7,7 +7,7 @@ const datasource = new typeorm.DataSource({
   entities: [
     require("./entities/Wilder"),
     require("./entities/Skill"),
-    // require("./entities/WilderSkill"),
+    require("./entities/Upvote"),
   ],
   logging: ["query", "error"],
 });

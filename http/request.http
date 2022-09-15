@@ -1,63 +1,21 @@
-GET http://localhost:4000/
+GET http://localhost:5000/
 
 ### 
-
-POST http://localhost:4000/api/wilders
-Content-Type: application/json
-
-{ "name": "David" }
-
-###
-GET http://localhost:4000/api/wilders
-Content-Type: application/json
-
-###
-GET http://localhost:4000/api/wilders/16
-
-###
-PUT http://localhost:4000/api/wilders/23
-Content-Type: application/json
-
-{ "name": "Pioupia", "skills": [{"id": 4}, {"id": 2}] }
-
-###
-DELETE http://localhost:4000/api/wilders/18
 
 
 ### 
 
-POST http://localhost:4000/api/skills
-Content-Type: application/json
-
-{ "name": "blabla" }
-
-###
-GET http://localhost:4000/api/skills
-Content-Type: application/json
-
-###
-GET http://localhost:4000/api/skills/4
-
-###
-PUT http://localhost:4000/api/skills/4
-Content-Type: application/json
-
-{ "name": "Pioupiou" }
-
-###
-DELETE http://localhost:4000/api/skills/4
 
 
-###
-POST http://localhost:4000/api/wilders/23/skills/4
+
 
 
 
 ###
-GET http://localhost:4000/api/wilders/1/skills/
+GET http://localhost:5000/api/wilders/1/skills/
 Content-Type: application/json
 
 { "skillId": [1, 2] }
 
 ###
-DELETE http://localhost:4000/api/wilders/1/skills/3
+DELETE http://localhost:5000/api/wilders/1/skills/3

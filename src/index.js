@@ -1,11 +1,14 @@
 // changer les require par des import
 const express = require(`express`);
 const datasource = require(`./utils`);
+const cors = require(`cors`);
 
 const wildersController = require(`./controllers/wilders`);
 const skillsController = require(`./controllers/skills`);
+const upvotesController = require(`./controllers/upvotes`);
 
 const app = express();
+app.use(cors());
 
 const asyncHandler = (controller) => {
   return async (req, res) => {
@@ -46,6 +49,9 @@ app.put("/api/wilders/:wilderId", asyncHandler(wildersController.update));
 // delete
 app.delete("/api/wilders/:wilderId", wildersController.delete);
 
+// addSkill OU faire un UPDATE du wilder
+app.post("/api/wilders/:wilderId/skills", wildersController.addSkill);
+
 /**
  * Skill routes
  */
@@ -66,21 +72,23 @@ app.put("/api/skills/:skillId", skillsController.update);
 app.delete("/api/skills/:skillId", skillsController.delete);
 
 /**
- * JoinTable routes Wilder - Skill (many to many)
+ * Upvote routes
  */
 
-app.post("/api/wilders/:wilderId/skills/:skillId", wildersController.addSkill);
+// create
+app.post("/api/upvotes", asyncHandler(upvotesController.create));
 
-app.get("/api/wilders/:wilderId/skills/", wildersController.findAllSkills);
-
-app.delete(
-  "/api/wilders/:wilderId/skills/:skillId",
-  wildersController.deleteSkill
+// update - increase
+app.put(
+  "/api/upvotes/:upvoteId/increase",
+  asyncHandler(upvotesController.increase)
 );
 
-// Start server
-app.listen(4000, async () => {
-  console.log("Server started on port:4000");
+/**
+ * Start serverskillsController
+ */
+app.listen(5000, async () => {
+  console.log("Server started on port:5000");
   await datasource.initialize();
   console.log("I'm connected ! ");
 });

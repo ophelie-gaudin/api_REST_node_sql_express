@@ -4,6 +4,8 @@ const repository = datasource.getRepository("Wilder");
 
 const skillRepository = datasource.getRepository("Skill");
 
+const upvoteRepository = datasource.getRepository("Upvote");
+
 module.exports = {
   create: async (req, res) => {
     // //* 1st METHOD : lancer les requêtes via TypeORM
@@ -83,6 +85,7 @@ module.exports = {
 
     try {
       const updatedWilder = await repository.save(wilder);
+
       res.json(updatedWilder);
     } catch (err) {
       console.error("UPDATE: Error when saving:", err);
@@ -126,22 +129,31 @@ module.exports = {
 
   addSkill: async (req, res) => {
     try {
-      const wilderToUpdate = await repository.findOneBy({
-        id: req.params.wilderId,
+      // ne fonctionne plus depuis qu'on a créé la table de jointure upvote
+      // const wilderToUpdate = await repository.findOne({
+      //   where: { id: req.params.wilderId },
+      //   relations: ["skills"],
+      // });
+      // console.log("Wilder to update : ", wilderToUpdate);
+
+      // const skillToAdd = await skillRepository.findOneBy({
+      //   id: req.body.skillId,
+      // });
+      // console.log("Skill to add :", skillToAdd);
+
+      // wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
+      // //wilderToUpdate.skills.push(skillToAdd)
+
+      // await repository.save(wilderToUpdate);
+
+      // res.send("Skill added to wilder");
+
+      const newUpvote = await upvoteRepository.save({
+        wilder: Number(req.params.wilderId),
+        skill: req.body.skillId,
       });
-      console.log("Wilder to update : ", wilderToUpdate);
 
-      const skillToAdd = await skillRepository.findOneBy({
-        id: req.params.skillId,
-      });
-      console.log("Skill to add :", skillToAdd);
-
-      wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
-      //wilderToUpdate.skills.push(skillToAdd)
-
-      await repository.save(wilderToUpdate);
-
-      res.send("Skill added to wilder");
+      res.json(newUpvote);
     } catch (err) {
       console.log(err);
       res.send("Error while adding skill to wilder");
@@ -176,19 +188,14 @@ module.exports = {
       const wilderSkills = wilderToDeleteSkill.skills;
       console.log("Wilder's skills :", wilderSkills);
 
-      wilderSkills.remove(skillToDelete).then(
-        () => {
-          console.log(
-            "Wilder without deleted skill",
-            wilderToDeleteSkill.skills
-          );
-          res.json({ success: true });
-        },
-        (err) => {
-          console.error("DELETE Error:", err);
-          res.json({ success: false });
-        }
-      );
+      try {
+      } catch (err) {
+        console.error("DELETE Error:", err);
+        res.json({ success: false });
+      }
+      await wilderSkills.remove(skillToDelete);
+      console.log("Wilder without deleted skill", wilderToDeleteSkill.skills);
+      res.json({ success: true });
     } catch (err) {
       console.log(err);
       res.send("Error while deleting wilder's skills");
