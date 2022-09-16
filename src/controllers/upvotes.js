@@ -36,11 +36,8 @@ module.exports = {
   },
 
   increase: async (req, res) => {
-    const existingUpvote = await repository.findOne({
-      where: {
-        skill: { id: req.body.skillId },
-        wilder: { id: req.body.wilderId },
-      },
+    const existingUpvote = await repository.findOneBy({
+      id: req.params.upvoteId,
     });
 
     if (existingUpvote) {

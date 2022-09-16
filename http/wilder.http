@@ -1,7 +1,7 @@
 POST http://localhost:5000/api/wilders
 Content-Type: application/json
 
-{ "name": "Pipoudouuu" }
+{ "name": "User 4" }
 
 ###
 GET http://localhost:5000/api/wilders

@@ -44,7 +44,9 @@ module.exports = {
 
   findAll: async (req, res) => {
     try {
-      const wilders = await repository.find();
+      const wilders = await repository.find({
+        relations: ["upvotes", "upvotes.skill"],
+      });
       res.json(wilders);
     } catch (err) {
       console.error("FINDALL Error :", err);
